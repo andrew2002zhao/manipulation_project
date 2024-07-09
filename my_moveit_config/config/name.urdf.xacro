@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="name">
-    <xacro:arg name="initial_positions_file" default="$(find my_moveit_config)/config/initial_positions.yaml" />
+    <xacro:arg name="initial_positions_file" default="initial_positions.yaml" />
 
     <!-- Import name urdf file -->
     <xacro:include filename="$(find ur_description)/urdf/ur.urdf.xacro" />
