@@ -44,8 +44,24 @@ ament_target_dependencies(pick_and_place
 	moveit_msgs
 )
 
+add_executable(pick_and_place_real src/pick_and_place_real.cpp)
+target_include_directories(pick_and_place_real PUBLIC include)
+
+ament_target_dependencies(pick_and_place_real
+	rclcpp
+	rclcpp_action
+	moveit_core
+	moveit_ros_planning
+	moveit_ros_planning_interface
+	interactive_markers
+	geometric_shapes
+	control_msgs
+	moveit_msgs
+)
+
 install(TARGETS 
 	pick_and_place
+	pick_and_place_real
     DESTINATION lib/${PROJECT_NAME}
 )
 
