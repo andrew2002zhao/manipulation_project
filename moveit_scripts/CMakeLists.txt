@@ -9,6 +9,8 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
+find_package(rclcpp_components REQUIRED)
+find_package(grasping_msgs REQUIRED)
 find_package(moveit_core REQUIRED)
 find_package(moveit_ros_planning REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
@@ -59,9 +61,32 @@ ament_target_dependencies(pick_and_place_real
 	moveit_msgs
 )
 
+add_library(pick_and_place_perception SHARED src/pick_and_place_perception.cpp)
+ament_target_dependencies(pick_and_place_perception
+	rclcpp
+	rclcpp_action
+	moveit_core
+	moveit_ros_planning
+	moveit_ros_planning_interface
+	interactive_markers
+	geometric_shapes
+	control_msgs
+	moveit_msgs
+	grasping_msgs
+	rclcpp_components
+)
+RCLCPP_COMPONENTS_REGISTER_NODES(pick_and_place_perception "MoveitScripts::PickAndPlacePerception")
+
+install(TARGETS
+	pick_and_place_perception
+	DESTINATION 
+	lib/
+)
+
 install(TARGETS 
 	pick_and_place
 	pick_and_place_real
+	
     DESTINATION lib/${PROJECT_NAME}
 )
 
