@@ -30,21 +30,26 @@ int main(int argc, char **argv) {
   moveit::core::RobotStatePtr current_state_arm =
       move_group_arm.getCurrentState(10);
 
+      
+
+  std::vector<double> joint_group_positions_arm;
+  current_state_arm->copyJointGroupPositions(joint_model_group_arm,
+                                             joint_group_positions_arm);
 
   move_group_arm.setStartStateToCurrentState();
 
-  // move hand to above object
 
- geometry_msgs::msg::Pose target_pose1;
-  target_pose1.orientation.x = -1.0;
-  target_pose1.orientation.y = 0.00;
-  target_pose1.orientation.z = 0.00;
-  target_pose1.orientation.w = 0.00;
-  target_pose1.position.x = 0.343;
-  target_pose1.position.y = 0.132;
-  target_pose1.position.z = 0.264;
 
-  move_group_arm.setPoseTarget(target_pose1);
+  move_group_arm.setStartStateToCurrentState();
+
+  joint_group_positions_arm[0] = -25 * PI / 180;  // Shoulder Pan
+  joint_group_positions_arm[1] = -83 * PI / 180; // Shoulder Lift
+  joint_group_positions_arm[2] = 102 * PI / 180;  // Elbow
+  joint_group_positions_arm[3] = -110 * PI / 180; // Wrist 1
+  joint_group_positions_arm[4] = -91 * PI / 180; // Wrist 2
+  joint_group_positions_arm[5] = 150 * PI / 180;  // Wrist 3
+
+  move_group_arm.setJointValueTarget(joint_group_positions_arm);
 
   moveit::planning_interface::MoveGroupInterface::Plan my_plan_arm;
   bool success_arm = (move_group_arm.plan(my_plan_arm) ==
@@ -52,7 +57,7 @@ int main(int argc, char **argv) {
 
   move_group_arm.execute(my_plan_arm);
 
-  
+ 
 
 // //   //open the hand
 
@@ -77,73 +82,106 @@ int main(int argc, char **argv) {
   move_group_hand.plan(my_plan_hand);
   move_group_hand.execute(my_plan_hand);
 
-  //lower arm by 5cm
-
-  target_pose1.position.z -= 0.05;
-
-  move_group_arm.setPoseTarget(target_pose1);
-
-  success_arm = (move_group_arm.plan(my_plan_arm) ==
-                 moveit::core::MoveItErrorCode::SUCCESS);
-
-  move_group_arm.execute(my_plan_arm);
-
-  //close hand
-    //approach the hand
-  current_state_hand -> copyJointGroupPositions(joint_model_group_hand, joint_group_positions_hand);
-
-  joint_group_positions_hand[2] = 30 * PI / 180;
-
-  move_group_hand.setJointValueTarget(joint_group_positions_hand);
-
-  move_group_hand.plan(my_plan_hand);
-  move_group_hand.execute(my_plan_hand);
-//     //fully close it
-  current_state_hand -> copyJointGroupPositions(joint_model_group_hand, joint_group_positions_hand);
-
-  joint_group_positions_hand[2] = 37.1 * PI / 180;
-
-  move_group_hand.setJointValueTarget(joint_group_positions_hand);
-
-  move_group_hand.plan(my_plan_hand);
-  move_group_hand.execute(my_plan_hand);
-
-// //   move back up
-    target_pose1.position.z += 0.05;
-
-    move_group_arm.setPoseTarget(target_pose1);
-
-    success_arm = (move_group_arm.plan(my_plan_arm) ==
-                    moveit::core::MoveItErrorCode::SUCCESS);
-
-    move_group_arm.execute(my_plan_arm);
+  
 
 
-//   // turn 180
+//   //lower arm by 5cm
+//   std::vector<geometry_msgs::msg::Pose> approach_waypoints;
+
+//   // move hand to above object
+
+//   geometry_msgs::msg::Pose target_pose1;
+//   target_pose1.orientation.x = -1.0;
+//   target_pose1.orientation.y = 0.00;
+//   target_pose1.orientation.z = 0.00;
+//   target_pose1.orientation.w = 0.00;
+//   target_pose1.position.x = 0.343;
+//   target_pose1.position.y = 0.132;
+//   target_pose1.position.z = 0.264;
+ 
+//   approach_waypoints.push_back(target_pose1)
+  
+
+//   target_pose1.position.z -= 0.025;
+//   approach_waypoints.push_back(target_pose1);
+
+//   target_pose1.position.z -= 0.025;
+//   approach_waypoints.push_back(target_pose1);
 
 
-    std::vector<double> joint_group_positions_arm;
-    current_state_arm->copyJointGroupPositions(joint_model_group_arm,
-                                                joint_group_positions_arm);
+//   moveit_msgs::msg::RobotTrajectory trajectory_approach;
+//   const double jump_threshold = 0.0;
+//   const double eef_step = 0.01;
 
-    joint_group_positions_arm[0] = joint_group_positions_arm[0] + PI;  // Shoulder Pan
-    move_group_arm.setJointValueTarget(joint_group_positions_arm);
+//   double fraction = move_group_arm.computeCartesianPath(
+//       approach_waypoints, eef_step, jump_threshold, trajectory_approach);
+//   move_group_arm.execute(trajectory_approach);
 
-    success_arm = (move_group_arm.plan(my_plan_arm) ==
-                    moveit::core::MoveItErrorCode::SUCCESS);
+//   //close hand
+//     //approach the hand
+//   current_state_hand -> copyJointGroupPositions(joint_model_group_hand, joint_group_positions_hand);
 
-    move_group_arm.execute(my_plan_arm);
+//   joint_group_positions_hand[2] = 30 * PI / 180;
 
-    //open the hand
+//   move_group_hand.setJointValueTarget(joint_group_positions_hand);
 
-    current_state_hand -> copyJointGroupPositions(joint_model_group_hand, joint_group_positions_hand);
+//   move_group_hand.plan(my_plan_hand);
+//   move_group_hand.execute(my_plan_hand);
+// //     //fully close it
+//   current_state_hand -> copyJointGroupPositions(joint_model_group_hand, joint_group_positions_hand);
 
-    joint_group_positions_hand[2] = 0;
+//   joint_group_positions_hand[2] = 37.1 * PI / 180;
 
-    move_group_hand.setJointValueTarget(joint_group_positions_hand);
+//   move_group_hand.setJointValueTarget(joint_group_positions_hand);
 
-    move_group_hand.plan(my_plan_hand);
-    move_group_hand.execute(my_plan_hand);
+//   move_group_hand.plan(my_plan_hand);
+//   move_group_hand.execute(my_plan_hand);
+
+// // //   move back up
+//      //lower arm by 5cm
+
+//   std::vector<geometry_msgs::msg::Pose> retreat_waypoints;
+//   target_pose1.position.z += 0.025;
+//   retreat_waypoints.push_back(target_pose1);
+
+//   target_pose1.position.z += 0.025;
+//   retreat_waypoints.push_back(target_pose1);
+
+
+//   moveit_msgs::msg::RobotTrajectory retreat_approach;
+
+//   fraction = move_group_arm.computeCartesianPath(
+//       retreat_waypoints, eef_step, jump_threshold, retreat_approach);
+//   move_group_arm.execute(retreat_approach);
+
+
+// //   // turn 180
+
+//     joint_model_group_arm = move_group_arm.getCurrentState()->getJointModelGroup(PLANNING_GROUP_ARM);
+
+
+//     std::vector<double> joint_group_positions_arm;
+//     current_state_arm->copyJointGroupPositions(joint_model_group_arm,
+//                                                 joint_group_positions_arm);
+
+//     joint_group_positions_arm[0] = joint_group_positions_arm[0] + PI;  // Shoulder Pan
+//     move_group_arm.setJointValueTarget(joint_group_positions_arm);
+
+//     success_arm = (move_group_arm.plan(my_plan_arm) ==
+//                     moveit::core::MoveItErrorCode::SUCCESS);
+
+//     move_group_arm.execute(my_plan_arm);
+
+//     //open the hand
+
+//     current_state_hand -> copyJointGroupPositions(joint_model_group_hand, joint_group_positions_hand);
+
+//     joint_group_positions_hand[2] = 0;
+
+//     move_group_hand.setJointValueTarget(joint_group_positions_hand);
+
+//     move_group_hand.plan(my_plan_hand);
+//     move_group_hand.execute(my_plan_hand);
 
 
   rclcpp::shutdown();
