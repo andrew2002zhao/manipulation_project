@@ -130,7 +130,7 @@ int main(int argc, char **argv) {
 //     //fully close it
   current_state_hand -> copyJointGroupPositions(joint_model_group_hand, joint_group_positions_hand);
 
-  joint_group_positions_hand[2] = 36 * PI / 180;
+  joint_group_positions_hand[2] = 37.1 * PI / 180;
 
   move_group_hand.setJointValueTarget(joint_group_positions_hand);
 
