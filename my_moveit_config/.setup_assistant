@@ -7,19 +7,4 @@ moveit_setup_assistant_config:
   package_settings:
     author_name: Andrew Zhao
     author_email: andrew2002zhao@gmail.com
-    generated_timestamp: 1720554200
-  control_xacro:
-    command:
-      - position
-    state:
-      - position
-      - velocity
-  modified_urdf:
-    xacros:
-      - control_xacro
-  control_xacro:
-    command:
-      - position
-    state:
-      - position
-      - velocity
+    generated_timestamp: 1722011580
