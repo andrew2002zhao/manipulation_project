@@ -77,8 +77,25 @@ ament_target_dependencies(pick_and_place_perception
 )
 RCLCPP_COMPONENTS_REGISTER_NODES(pick_and_place_perception "MoveitScripts::PickAndPlacePerception")
 
+add_library(pick_and_place_perception_real SHARED src/pick_and_place_perception_real.cpp)
+ament_target_dependencies(pick_and_place_perception_real
+	rclcpp
+	rclcpp_action
+	moveit_core
+	moveit_ros_planning
+	moveit_ros_planning_interface
+	interactive_markers
+	geometric_shapes
+	control_msgs
+	moveit_msgs
+	grasping_msgs
+	rclcpp_components
+)
+RCLCPP_COMPONENTS_REGISTER_NODES(pick_and_place_perception_real "MoveitScripts::PickAndPlacePerceptionReal")
+
 install(TARGETS
 	pick_and_place_perception
+	pick_and_place_perception_real
 	DESTINATION 
 	lib/
 )

@@ -39,9 +39,6 @@ int main(int argc, char **argv) {
   move_group_arm.setStartStateToCurrentState();
 
 
-
-  move_group_arm.setStartStateToCurrentState();
-
   joint_group_positions_arm[0] = -6 * PI / 180;  // Shoulder Pan
   joint_group_positions_arm[1] = -51 * PI / 180; // Shoulder Lift
   joint_group_positions_arm[2] = 3 * PI / 180;  // Elbow
