@@ -144,16 +144,8 @@ int main(int argc, char **argv) {
   // turn 180
 
 
+  joint_group_positions_arm[0] = 155 * PI / 180;  // Shoulder Pan
 
-  current_state_arm->copyJointGroupPositions(joint_model_group_arm,
-                                             joint_group_positions_arm);
-
-  joint_group_positions_arm[0] = joint_group_positions_arm[0] + PI;  // Shoulder Pan
-  joint_group_positions_arm[1] = -83 * PI / 180; // Shoulder Lift
-  joint_group_positions_arm[2] = 102 * PI / 180;  // Elbow
-  joint_group_positions_arm[3] = -110 * PI / 180; // Wrist 1
-  joint_group_positions_arm[4] = -91 * PI / 180; // Wrist 2
-  joint_group_positions_arm[5] = 150 * PI / 180;  // Wrist 3
 
   move_group_arm.setJointValueTarget(joint_group_positions_arm);
 
