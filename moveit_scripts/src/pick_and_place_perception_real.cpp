@@ -26,7 +26,7 @@ using namespace std::placeholders;
 namespace MoveitScripts{
     class PickAndPlacePerceptionReal : public rclcpp::Node {
         public:
-            PickAndPlacePerceptionReal(const rclcpp::NodeOptions & nodeOptions) : Node("get_pose_client", nodeOptions){
+            PickAndPlacePerceptionReal(const rclcpp::NodeOptions & nodeOptions) : Node("get_pose_client_real", nodeOptions){
                 this -> client_ptr_ = rclcpp_action::create_client<Find>(
                     this->get_node_base_interface(), 
                     this->get_node_graph_interface(),
@@ -111,6 +111,8 @@ namespace MoveitScripts{
                             result.result->objects[0].object.primitive_poses[0].position.x);
                 RCLCPP_INFO(this->get_logger(), "Y: %f",
                             result.result->objects[0].object.primitive_poses[0].position.y);
+
+                
       
                 
                 static const std::string PLANNING_GROUP_ARM = "manipulator_arm";
@@ -167,6 +169,8 @@ namespace MoveitScripts{
 
                 //  move hand to above object
 
+        
+
 
                 joint_group_positions_arm[0] = -6 * PI / 180;  // Shoulder Pan
                 joint_group_positions_arm[1] = -51 * PI / 180; // Shoulder Lift
@@ -193,9 +197,9 @@ namespace MoveitScripts{
                 target_pose1.orientation.y = 0.00;
                 target_pose1.orientation.z = 0.00;
                 target_pose1.orientation.w = 0.00;
-                target_pose1.position.x = result.result->objects[0].object.primitive_poses[0].position.x + 0.01;
-                target_pose1.position.y = result.result->objects[0].object.primitive_poses[0].position.y - 0.01;
-                target_pose1.position.z = 0.21;
+                target_pose1.position.x = result.result->objects[0].object.primitive_poses[0].position.x + 0.015;
+                target_pose1.position.y = result.result->objects[0].object.primitive_poses[0].position.y + 0.015;
+                target_pose1.position.z = 0.25;
                 
                 // move_group_arm.setPoseTarget(target_pose1);
                 // moveit::planning_interface::MoveGroupInterface::Plan my_plan_arm;
@@ -228,78 +232,78 @@ namespace MoveitScripts{
 
                 // // //close hand
                 //     //approach the hand
-                // current_state_hand -> copyJointGroupPositions(joint_model_group_hand, joint_group_positions_hand);
+                current_state_hand -> copyJointGroupPositions(joint_model_group_hand, joint_group_positions_hand);
 
-                // joint_group_positions_hand[2] = 35 * PI / 180;
+                joint_group_positions_hand[2] = 35 * PI / 180;
 
-                // move_group_hand.setJointValueTarget(joint_group_positions_hand);
+                move_group_hand.setJointValueTarget(joint_group_positions_hand);
 
-                // move_group_hand.plan(my_plan_hand);
-                // move_group_hand.execute(my_plan_hand);
+                move_group_hand.plan(my_plan_hand);
+                move_group_hand.execute(my_plan_hand);
                 //     //fully close it
-                // current_state_hand -> copyJointGroupPositions(joint_model_group_hand, joint_group_positions_hand);
+                current_state_hand -> copyJointGroupPositions(joint_model_group_hand, joint_group_positions_hand);
 
-                // joint_group_positions_hand[2] = 37.1 * PI / 180;
+                joint_group_positions_hand[2] = 37.1 * PI / 180;
 
-                // move_group_hand.setJointValueTarget(joint_group_positions_hand);
+                move_group_hand.setJointValueTarget(joint_group_positions_hand);
 
-                // move_group_hand.plan(my_plan_hand);
-                // move_group_hand.execute(my_plan_hand);
+                move_group_hand.plan(my_plan_hand);
+                move_group_hand.execute(my_plan_hand);
 
                 // //   move back up
                 // RCLCPP_INFO(LOGGER, "Approach to object!");
 
-                // std::vector<geometry_msgs::msg::Pose> retreat_waypoints;
-                // target_pose1.position.z += 0.04;
-                // retreat_waypoints.push_back(target_pose1);
+                std::vector<geometry_msgs::msg::Pose> retreat_waypoints;
+                target_pose1.position.z += 0.04;
+                retreat_waypoints.push_back(target_pose1);
 
-                // target_pose1.position.z += 0.04;
-                // retreat_waypoints.push_back(target_pose1);
+                target_pose1.position.z += 0.04;
+                retreat_waypoints.push_back(target_pose1);
 
-                // target_pose1.position.z += 0.04;
-                // retreat_waypoints.push_back(target_pose1);
+                target_pose1.position.z += 0.04;
+                retreat_waypoints.push_back(target_pose1);
 
                 
 
-                // moveit_msgs::msg::RobotTrajectory trajectory_retreat;
+                moveit_msgs::msg::RobotTrajectory trajectory_retreat;
              
 
-                // fraction = move_group_arm.computeCartesianPath(
-                //     retreat_waypoints, eef_step, jump_threshold, trajectory_retreat);
+                fraction = move_group_arm.computeCartesianPath(
+                    retreat_waypoints, eef_step, jump_threshold, trajectory_retreat);
 
-                // move_group_arm.execute(trajectory_retreat);
+                move_group_arm.execute(trajectory_retreat);
 
                 // // turn 180
 
 
 
                 // // // Get Current State
-                // current_state_arm =
-                //     move_group_arm.getCurrentState(10);
+                current_state_arm =
+                    move_group_arm.getCurrentState(10);
 
-                // current_state_arm->copyJointGroupPositions(joint_model_group_arm,
-                //                                             joint_group_positions_arm);
+                current_state_arm->copyJointGroupPositions(joint_model_group_arm,
+                                                            joint_group_positions_arm);
 
-                // joint_group_positions_arm[0] = joint_group_positions_arm[0] + PI;  // Shoulder Pan
+                joint_group_positions_arm[0] = joint_group_positions_arm[0] + PI;  // Shoulder Pan
          
 
-                // move_group_arm.setJointValueTarget(joint_group_positions_arm);
+                move_group_arm.setJointValueTarget(joint_group_positions_arm);
 
-                // success_arm = (move_group_arm.plan(my_plan_arm) ==
-                //                 moveit::core::MoveItErrorCode::SUCCESS);
+                success_arm = (move_group_arm.plan(my_plan_arm) ==
+                                moveit::core::MoveItErrorCode::SUCCESS);
 
-                // move_group_arm.execute(my_plan_arm);
+                move_group_arm.execute(my_plan_arm);
 
                 // //open the hand
 
-                // current_state_hand -> copyJointGroupPositions(joint_model_group_hand, joint_group_positions_hand);
+                current_state_hand -> copyJointGroupPositions(joint_model_group_hand, joint_group_positions_hand);
 
-                // joint_group_positions_hand[2] = 0;
+                joint_group_positions_hand[2] = 0;
 
-                // move_group_hand.setJointValueTarget(joint_group_positions_hand);
+                move_group_hand.setJointValueTarget(joint_group_positions_hand);
 
-                // move_group_hand.plan(my_plan_hand);
-                // move_group_hand.execute(my_plan_hand);
+                move_group_hand.plan(my_plan_hand);
+                move_group_hand.execute(my_plan_hand);
             }
 
     };

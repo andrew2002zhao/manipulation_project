@@ -206,10 +206,10 @@ namespace MoveitScripts{
 
                 std::vector<geometry_msgs::msg::Pose> approach_waypoints;
                 approach_waypoints.push_back(target_pose1);
-                target_pose1.position.z -= 0.025;
+                target_pose1.position.z -= 0.02;
                 approach_waypoints.push_back(target_pose1);
 
-                target_pose1.position.z -= 0.025;
+                target_pose1.position.z -= 0.02;
                 approach_waypoints.push_back(target_pose1);
 
 
@@ -222,27 +222,29 @@ namespace MoveitScripts{
 
                 move_group_arm.execute(trajectory_approach);
 
-               
-
-                // //close hand
-                    //approach the hand
                 current_state_hand -> copyJointGroupPositions(joint_model_group_hand, joint_group_positions_hand);
 
-                joint_group_positions_hand[2] = 35 * PI / 180;
+                joint_group_positions_hand[2] = 34 * PI / 180;
 
                 move_group_hand.setJointValueTarget(joint_group_positions_hand);
 
                 move_group_hand.plan(my_plan_hand);
                 move_group_hand.execute(my_plan_hand);
-                    //fully close it
-                current_state_hand -> copyJointGroupPositions(joint_model_group_hand, joint_group_positions_hand);
 
-                joint_group_positions_hand[2] = 37.1 * PI / 180;
+                for(int i = (34 / 0.1); i < (35.5 / 0.1); i++) {
 
-                move_group_hand.setJointValueTarget(joint_group_positions_hand);
+                     //fully close it
+                    current_state_hand -> copyJointGroupPositions(joint_model_group_hand, joint_group_positions_hand);
 
-                move_group_hand.plan(my_plan_hand);
-                move_group_hand.execute(my_plan_hand);
+                    joint_group_positions_hand[2] = (i * 0.1) * PI / 180;
+
+                    move_group_hand.setJointValueTarget(joint_group_positions_hand);
+
+                    move_group_hand.plan(my_plan_hand);
+                    move_group_hand.execute(my_plan_hand);
+                
+                }
+                
 
                 //   move back up
                 RCLCPP_INFO(LOGGER, "Approach to object!");

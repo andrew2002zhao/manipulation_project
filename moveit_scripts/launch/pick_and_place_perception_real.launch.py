@@ -36,8 +36,12 @@ def generate_launch_description():
         executable="basic_grasping_perception_node",
         namespace="",
         output="screen",
+        remappings=[
+            ('/wrist_rgbd_depth_sensor/points', '/camera/depth/color/points')
+        ],
         parameters=[
             {'use_sim_time': False},
+            
         ]
     )
    
